@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="642.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controller">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Button fx:id="iconBtn" mnemonicParsing="false" onAction="#iconButtonClicked" prefHeight="632.0" prefWidth="600.0" style="-fx-pref-height: 10000; -fx-pref-width: 10000; -fx-background-color: white; -fx-text-fill: black; -fx-font-size: 30; -fx-font-family: sans-serif; -fx-alignment: center-left;" text="         Choose icon" GridPane.rowIndex="1">
+         <rotationAxis>
+            <Point3D />
+         </rotationAxis>
+         <graphic>
+             <ImageView fx:id="iconImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" translateX="30.0">
+               <image>
+                  <Image url="@icon.png" />
+               </image>
+             </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="createBtn" mnemonicParsing="false" onAction="#createButtonClicked" prefHeight="200.0" prefWidth="635.0" style="-fx-pref-width: 10000; -fx-pref-height: 10000; -fx-background-color: white; -fx-text-fill: black; -fx-font-size: 30; -fx-font-family: sans-serif; -fx-alignment: center-left;" text="         Find and create shortcut" GridPane.rowIndex="2">
+         <graphic>
+            <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" translateX="30.0">
+               <image>
+                  <Image url="@shortcut.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem fx:id="chooseDir" mnemonicParsing="false" onAction="#chooseDir" text="Choose directory for shortcut files" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem fx:id="openShortcutsDir" mnemonicParsing="false" onAction="#openShortcuts" text="Find my other shortcuts!" />
+                  <MenuItem fx:id="openShortcutsDir1" mnemonicParsing="false" onAction="#shortcutToThis" text="Make taskbar shortcut for this application! (Chosen icon will be applied)" />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</GridPane>
