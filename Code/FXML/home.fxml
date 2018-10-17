@@ -52,7 +52,6 @@
             <Menu mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem fx:id="openShortcutsDir" mnemonicParsing="false" onAction="#openShortcuts" text="Find my other shortcuts!" />
-                  <MenuItem fx:id="openShortcutsDir1" mnemonicParsing="false" onAction="#shortcutToThis" text="Make taskbar shortcut for this application! (Chosen icon will be applied)" />
                </items>
             </Menu>
         </menus>
