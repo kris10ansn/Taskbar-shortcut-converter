@@ -46,12 +46,12 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="chooseDir" mnemonicParsing="false" onAction="#chooseDir" text="Choose directory for shortcut files" />
+              <MenuItem fx:id="chooseDirMenuBtn" mnemonicParsing="false" onAction="#chooseDirMenuBtn" text="Choose directory for shortcut files" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
-                  <MenuItem fx:id="openShortcutsDir" mnemonicParsing="false" onAction="#openShortcuts" text="Find my other shortcuts!" />
+                  <MenuItem fx:id="openShortcutsDir" mnemonicParsing="false" onAction="#openShortcutsMenuBtn" text="Find my other shortcuts!" />
                </items>
             </Menu>
         </menus>

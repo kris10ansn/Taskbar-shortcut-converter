@@ -11,58 +11,6 @@ var iconPath:String = "icon.png"
 // TODO: Change icon when icon is chosen, image file converter
 class Controller {
 
-    fun createShortcut(f:File, iconpath:String) {
-        val ftext = f.readText()
-
-        val start = ftext.indexOf("URL=") + 4
-        var end = ftext.indexOf("IconFile=")
-
-        if(end == -1) end = ftext.length-1
-
-        val url = ftext.substring(start until end)
-
-        // Creates directories if they're not already there
-        File(shortcutDir).mkdirs()
-
-        val shortcut = File("$shortcutDir\\${f.nameWithoutExtension}.lnk")
-
-        val createPs = File("$shortcutDir\\create ${f.nameWithoutExtension} shortcut.ps1")
-        createPs.writeText("" +
-                "\$ComObj = New-Object -ComObject WScript.Shell; " +
-                // Shortcut variable                     // Directory for shortcut
-                "\$ShortCut = \$ComObj.CreateShortcut(\"\$Env:${shortcut.absolutePath}\");" +
-                // Opens cmd (when shortcut is run)
-                "\$ShortCut.TargetPath = \"%windir%\\system32\\cmd.exe\"; " +
-                // Description
-                "\$ShortCut.Description = \"${f.nameWithoutExtension}\"; " +
-                // Runs command then closes prompt ("/c")
-                "\$ShortCut.Arguments = \"/c \"\"start $url\"\"\"; " +
-
-                "\$ShortCut.FullName; \$ShortCut.WindowStyle = 7; " +
-                // Icon path
-                "\$ShortCut.IconLocation = \"$iconpath\";" +
-                // Saves shortcut
-                "\$ShortCut.Save();" +
-                // Deletes ps1 file
-                "Remove-Item \"${createPs.absolutePath}\";"
-        )
-
-        Runtime.getRuntime().exec("Powershell.exe -executionpolicy remotesigned -File \"$createPs\"")
-
-        var i = 0
-        // Waits until the file has been created
-        while(!shortcut.exists()) {
-            i++
-            if(i >= 6000000) {
-                // If it takes too long, an error message is printed out, and the script is stopped
-                println("Shortcut might not have been created. Check out $shortcutDir")
-                return
-            }
-        }
-
-        Runtime.getRuntime().exec("explorer.exe /select, ${shortcut.absolutePath}")
-
-    }
     fun iconButtonClicked() {
         val icon = selectFile(ExtensionFilter("Icon files", "*.ico"), "Select icon")
         if(icon != null) {
@@ -76,10 +24,10 @@ class Controller {
                         ExtensionFilter(".url shortcut file", "*.url"),
                         "Select .url shortcut file"
                 ) as File,
-            iconPath)
+                iconPath)
     }
 
-    fun chooseDir() {
+    fun chooseDirMenuBtn() {
         val dir = selectDir("Choose directory for shortcut files")
         if(dir != null) {
             shortcutDir = dir.absolutePath
@@ -87,30 +35,74 @@ class Controller {
         }
     }
 
-    fun openShortcuts() {
-        Runtime.getRuntime().exec("explorer.exe $shortcutDir")
+    fun openShortcutsMenuBtn() { Runtime.getRuntime().exec("explorer.exe $shortcutDir") }
+
+    private fun createShortcut(f:File, iconpath:String) {
+        val ftext = f.readText()
+
+        val start = ftext.indexOf("URL=") + 4 // Length of "URL=" is 4
+
+        var end = ftext.indexOf("IconFile=")
+        if(end == -1) end = ftext.length-1
+
+        val url = ftext.substring(start until end)
+
+        // Creates directories if they're not already there
+        File(shortcutDir).mkdirs()
+
+        val shortcut = File("$shortcutDir\\${f.nameWithoutExtension}.lnk")
+
+        val command = "" +
+                "\$ComObj = New-Object -ComObject WScript.Shell; " +
+                // Shortcut variable                     // Directory for shortcut
+                "\$ShortCut = \$ComObj.CreateShortcut(\\\"\$Env:${shortcut.absolutePath}\\\"); " +
+                // Opens cmd (when shortcut is run)
+                "\$ShortCut.TargetPath = \\\"%windir%\\system32\\cmd.exe\\\"; " +
+                // Description
+                "\$ShortCut.Description = \\\"${f.nameWithoutExtension}\\\"; " +
+                // Runs command then closes prompt ("/c")
+                "\$ShortCut.Arguments = \\\"/c \\\"\\\"start $url\\\"\\\"\\\"; " +
+                // Stuff i don't quite know what do, and don't bother to look up atm
+                "\$ShortCut.FullName; \$ShortCut.WindowStyle = 7; " +
+                // Icon path
+                "\$ShortCut.IconLocation = \\\"$iconpath\\\"; " +
+                // Saves shortcut
+                "\$ShortCut.Save(); "
+
+        Runtime.getRuntime().exec("Powershell.exe -executionpolicy remotesigned -command \"$command\"")
+
+
+        var i = 0
+        // Waits until the file has been created
+        while(!shortcut.exists()) {
+            i++
+            if(i >= 3000000) {
+                // If it takes too long, an error message is printed out, and the script is stopped
+                println("Shortcut might not have been created. Check out $shortcutDir")
+                return
+            }
+        }
+
+        Runtime.getRuntime().exec("explorer.exe /select, ${shortcut.absolutePath}")
+
     }
 
-    private fun getPath() : String {
-        return File(App::class.java.protectionDomain.codeSource.location.toURI()).path
+    private fun selectFile(filter:ExtensionFilter, title:String, dir:File? = null): File? {
+        val fc = FileChooser()
+
+        fc.title = title
+        fc.extensionFilters.add(filter)
+        if(dir != null) fc.initialDirectory = dir
+
+        return fc.showOpenDialog(null)
     }
 
-}
+    private fun selectDir(title:String) : File? {
+        val dc = DirectoryChooser()
 
-fun selectFile(filter:ExtensionFilter, title:String, dir:File? = null): File? {
-    val fc = FileChooser()
+        dc.title = title
 
-    fc.title = title
-    fc.extensionFilters.add(filter)
-    if(dir != null) fc.initialDirectory = dir
+        return dc.showDialog(null)
+    }
 
-    return fc.showOpenDialog(null)
-}
-
-fun selectDir(title:String) : File? {
-    val dc = DirectoryChooser()
-
-    dc.title = title
-
-    return dc.showDialog(null)
 }

@@ -10,9 +10,7 @@ import java.io.File
 
 fun main(args: Array<String>) {
 
-    try {
-        shortcutDir = File("dir.txt").readText()
-    } catch (e:Exception) {  }
+    try { shortcutDir = File("dir.txt").readText() } catch (e:Exception) {}
 
     Application.launch(App::class.java)
 }
