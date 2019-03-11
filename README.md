@@ -1,4 +1,5 @@
-# Taskbar shortcut converter
+# Taskbar shortcut converter ((OLD))
+# Check out new version: https://github.io/kris10ansn/shortcut-converter
 Download the .jar file to use the program. No other files needed
 
 A simple application for converting .url shortcuts to .Ink shortcuts which can be pinned to the taskbar. 
